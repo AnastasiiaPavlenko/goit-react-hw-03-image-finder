@@ -15,10 +15,10 @@ class Button extends Component {
     //     behavior: 'smooth',
     // });
     render() {
-        return (<button type="button" className={styles.Button}>
+        return (<button type="button" className={styles.Button} onClick={this.props.onClick}>
             Load more
         </button>);
     }
 };
 
-export default ImageGalleryItem;
+export default Button;
