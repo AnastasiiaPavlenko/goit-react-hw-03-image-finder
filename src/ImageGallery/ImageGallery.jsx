@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import styles from './ImageGallery.module.css';
 import SearchBar from '../SearchBar/SearchBar'
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Loader from '../Loader/Loader';
 import Button from '../Button/Button';
-// import Modal from '../Modal/Modal';
+import ImagesApi from '../services/ImagesApi';
+import Modal from '../Modal/Modal';
 
 class ImageGallery extends Component {
     state = {
@@ -14,47 +14,70 @@ class ImageGallery extends Component {
         error: null,
         searchQuery: "",
         page: 1,
+        largeImageUrl: null,
+        openModal: false,
     };
 
     componentDidUpdate(prevProps, prevState) {
         const prevQuery = prevState.searchQuery;
         const nextQuery = this.state.searchQuery;
 
-        if (prevQuery != nextQuery) {
+        if (prevQuery !== nextQuery) {
             this.fetchGalleryItems();
+        }
+
+        if (!this.state.isLoading) {
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth',
+            });
         }
     };
 
     fetchGalleryItems = () => {
+        const { searchQuery, page } = this.state;
         this.setState({ isLoading: true });
 
-        fetch(`https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=${this.state.searchQuery}&page=${this.state.page}&per_page=12&key=14234855-711e9a9449f1d753999c1992c`)
-            .then(res => res.json())
-            .then(data => {
-                this.setState(prevState => ({ galleryItems: data.hits, page: prevState.page + 1 }));
-            }).catch(error => {
-                this.setState({ error });
-            }).finally(() => {
-                this.setState({
-                    isLoading: false,
-                })
-            })
+        ImagesApi
+            .fetchImagesWithQuery(searchQuery, page)
+            .then(galleryItems =>
+                this.setState(prevState => ({
+                    galleryItems: [...prevState.galleryItems, ...galleryItems],
+                    page: prevState.page + 1,
+                })),
+        )
+            .catch(error => this.setState({ error }))
+            .finally(() => this.setState({ isLoading: false }));
+
     };
 
     handleSearchFormSubmit = query => {
-        this.setState({ searchQuery: query });
+        this.setState({
+            searchQuery: query,
+            page: 1,
+            galleryItems: [],
+        });
+    };
+
+    setLargeImage = largeImageUrl => {
+        this.setState({ largeImageUrl: largeImageUrl });
+        this.toggleModal();
+    };
+
+    toggleModal = () => {
+        this.setState(state => ({ openModal: !state.openModal }));
     };
 
     render() {
-        const { galleryItems, isLoading, error } = this.state;
+        const { galleryItems, isLoading, error, openModal, largeImageUrl } = this.state;
         return (<>
             <SearchBar onSubmit={this.handleSearchFormSubmit} />
             {error && <p>Woops, something went wrong: {error.message} </p>}
             {isLoading && <Loader />}
             <ul className={styles.ImageGallery}>
-                {galleryItems.length > 0 && <ImageGalleryItem galleryItems={galleryItems} />}
+                {galleryItems.length > 0 && <ImageGalleryItem onOpen={this.setLargeImage} galleryItems={galleryItems} />}
             </ul>
-            {/* <Modal /> */}
+            {openModal && <Modal url={largeImageUrl} onClose={this.toggleModal} />}
             {galleryItems.length > 0 && <Button onClick={this.fetchGalleryItems} />}
         </>
         );

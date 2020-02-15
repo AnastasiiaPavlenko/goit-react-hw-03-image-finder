@@ -1,27 +1,23 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import styles from './SearchBar.module.css';
 
 class SearchBar extends Component {
+    static propTypes = {
+        onSubmit: PropTypes.func.isRequired,
+    };
+
     state = { value: "" };
 
     handleChange = e => {
-        // if (event.key === 'Enter') {
-        // event.preventDefault();
-        console.log(e.target.value);
         this.setState({ value: e.target.value })
-        // this.props.onSubmit(e.target.value);
-        // }
     };
 
     handleSubmit = e => {
         e.preventDefault();
-        console.log(this.state.value);
         this.props.onSubmit(this.state.value);
         this.setState({ value: "" });
     };
-
-    // handleKeyDown = this.handleKeyDown.bind(this);
 
     render() {
         return <header className={styles.Searchbar}>

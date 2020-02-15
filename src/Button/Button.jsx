@@ -1,24 +1,19 @@
-import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './Button.module.css';
 
-
-class Button extends Component {
-    state = {
-        galleryItems: [],
-        isLoading: false,
-        error: null,
-    };
-
-    // window.scrollTo({
-    //     top: document.documentElement.scrollHeight,
-    //     behavior: 'smooth',
-    // });
-    render() {
-        return (<button type="button" className={styles.Button} onClick={this.props.onClick}>
+const Button = ({ onClick }) => (
+    <div className={styles.ButtonWrap}>
+        <button type="button" className={styles.Button} onClick={onClick}>
             Load more
-        </button>);
-    }
-};
+        </button>
+    </div>
+
+);
 
 export default Button;
+
+
+Button.propTypes = {
+    onClick: PropTypes.func.isRequired,
+};

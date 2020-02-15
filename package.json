@@ -4,6 +4,7 @@
   "private": false,
   "homepage": "https://anastasiiapavlenko.github.io/goit-react-hw-03-image-finder/",
   "dependencies": {
+    "axios": "^0.19.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-scripts": "^3.3.1",

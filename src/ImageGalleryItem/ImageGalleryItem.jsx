@@ -1,12 +1,16 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import styles from './ImageGalleryItem.module.css';
-import Modal from '../Modal/Modal';
 
-const ImageGalleryItem = ({ galleryItems }) => (
-    galleryItems.map(({ id, webformatURL, likes, views, comments, downloads }) => (
+const ImageGalleryItem = ({ galleryItems, onOpen }) => (
+    galleryItems.map(({ id, webformatURL, largeImageURL, likes, views, comments, downloads }) => (
         <li className={styles.photo_card} key={id}>
-            <img src={webformatURL} alt="" className={styles.ImageGalleryItem_image} />
+            <img
+                src={webformatURL}
+                alt=""
+                className={styles.ImageGalleryItem_image}
+                onClick={() => onOpen(largeImageURL)}
+            />
 
             <div className={styles.stats}>
                 <p className={styles.stats_item}>
@@ -26,12 +30,12 @@ const ImageGalleryItem = ({ galleryItems }) => (
                     {downloads}
                 </p>
             </div>
-
-            {/* <!-- Кнопка для открытия модалки с большим изображением, появляется при наведении --> */}
-            <button type="button" className={styles.fullscreen_button}>
-                <i className="material-icons">zoom_out_map</i>
-            </button>
         </li>
     )));
 
 export default ImageGalleryItem;
+
+ImageGalleryItem.propTypes = {
+    galleryItems: PropTypes.array.isRequired,
+    onOpen: PropTypes.func.isRequired,
+};
