@@ -32,7 +32,7 @@ class Modal extends Component {
     render() {
         const { url } = this.props;
         return (<div className={styles.Overlay}>
-            <div onClnick={this.closeByClick} className={styles.Modal}>
+            <div onClick={this.closeByClick} className={styles.Modal}>
                 <img src={url} alt="" />
             </div>
         </div>
