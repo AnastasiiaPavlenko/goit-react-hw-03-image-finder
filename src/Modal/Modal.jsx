@@ -20,7 +20,7 @@ class Modal extends Component {
     handleKeyDown = ({ key }) => {
         if (key === 'Escape') {
             this.props.onClose();
-        }
+        } 
     };
 
     closeByClick = ({ target, currentTarget }) => {
